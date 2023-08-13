@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"sync"
-    strct "eventbus/structures"
+    strct "event_bus/structures"
 )
 
 var ch = make(chan strct.Event)
@@ -31,7 +31,6 @@ func Consumer(wg *sync.WaitGroup) {
 
 func main() {
 	var wg sync.WaitGroup
-    fmt.Println(wg)
 	wg.Add(1)
     // & before argument - pointer to var wg
     // if send wg, golang copy wg and send wg value to fucntion,
