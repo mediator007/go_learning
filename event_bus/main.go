@@ -1,9 +1,9 @@
 package main
 
 import (
+	strct "event_bus/structures"
 	"fmt"
 	"sync"
-    strct "event_bus/structures"
 )
 
 var ch = make(chan strct.Event)
@@ -12,31 +12,35 @@ func SendEvent(ch chan strct.Event, event strct.Event) {
 	ch <- event
 }
 
-func Processor(wg *sync.WaitGroup) {
-	fmt.Println("---Processor start---")
-	data := strct.EventData{1, "DefaultOperation"}
+func Processor(wg *sync.WaitGroup, increment int) {
+	fmt.Println("Processor", increment, " start")
+	data := strct.EventData{increment, "DefaultOperation"}
 	event := strct.Event{"DefaultEvent", data}
-	go SendEvent(ch, event)
+	//try SendEvent gorutine
+	SendEvent(ch, event)
+	fmt.Println("Processor", increment, " send data")
 	// defer is like Finally
 	defer wg.Done()
 }
 
-func Consumer(wg *sync.WaitGroup) {
-    // * before type - type: pointer to a sync.WaitGroup type var
-	fmt.Println("---Consumer start---")
+func Consumer(wg *sync.WaitGroup, id int) {
+	// * before type - type: pointer to a sync.WaitGroup type var
 	event_id := (<-ch).EventData.Id
-	fmt.Println(event_id)
+	fmt.Println("---Consumer", id, "get result:", event_id)
 	defer wg.Done()
 }
 
 func main() {
 	var wg sync.WaitGroup
-	wg.Add(1)
-    // & before argument - pointer to var wg
-    // if send wg, golang copy wg and send wg value to fucntion,
-    //but not wg object
-	go Processor(&wg)
-	wg.Add(1)
-	go Consumer(&wg)
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		// & before argument - pointer to var wg
+		// if send wg, golang copy wg and send wg value to fucntion,
+		//but not wg object
+		go Processor(&wg, i)
+		wg.Add(1)
+		go Consumer(&wg, i)
+	}
+	fmt.Println(" ###### Cycle end ####### ")
 	wg.Wait()
 }
