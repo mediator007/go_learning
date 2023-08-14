@@ -1,7 +1,7 @@
 package main
 
 import (
-	strct "event_bus/structures"
+	strct "channels/structures"
 	"fmt"
 	"sync"
 )
