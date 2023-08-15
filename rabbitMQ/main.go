@@ -1,16 +1,16 @@
 package main
 
-import (
-	"fmt"
-	"sync"
-	amqp "github.com/rabbitmq/amqp091-go"
-)
+// import (
+// 	"sync"
+// )
 
 func main() {
-	var wg sync.WaitGroup
+	// var wg sync.WaitGroup
 
-	for i := 0; i < 10; i++ {
-		fmt.Println(" Rabbit ")
-	}
-	wg.Wait()
+	// for i := 0; i < 10; i++ {
+	// 	fmt.Println(" Rabbit ")
+	// }
+	// wg.Wait()
+	send()
+	recieve()
 }
