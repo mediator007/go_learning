@@ -9,7 +9,8 @@ func main() {
 	wg.Add(1)
 	for i := 0; i < 10; i++ {
 		go send(i)
-		go recieve(i)
+		go dispatcher(i)
 	}
+	recieve(1)
 	wg.Wait()
 }
