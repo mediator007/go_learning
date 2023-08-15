@@ -1,12 +1,15 @@
 package main
 
 import (
-	"log"
-
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-func recieve(id int) {
+func SendData(ch chan string, data string) {
+	ch <- data
+}
+
+func reciever(id int, dispatchersChannelsList []chan string) {
+
 	conn, err := amqp.Dial("amqp://guest:guest@172.17.0.2:5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
@@ -16,7 +19,7 @@ func recieve(id int) {
 	defer ch.Close()
 
 	q, err := ch.QueueDeclare(
-		"hello", // name
+		"event_bus", // name
 		false,   // durable
 		false,   // delete when unused
 		false,   // exclusive
@@ -40,10 +43,11 @@ func recieve(id int) {
 
 	go func() {
 		for d := range msgs {
-			log.Printf("Receiver № %d get a message: %s", id, d.Body)
+			for _, c := range dispatchersChannelsList {
+				data := string(d.Body)
+				go SendData(c, data)
+			}
 		}
 	}()
-
-	// log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
 	<-forever
 }

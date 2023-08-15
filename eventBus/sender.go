@@ -2,13 +2,12 @@ package main
 
 import (
 	"context"
-	"log"
 	"time"
 	"fmt"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-func send(id int) {
+func sender(id int) {
 	conn, err := amqp.Dial("amqp://guest:guest@172.17.0.2:5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
@@ -18,7 +17,7 @@ func send(id int) {
 	defer ch.Close()
 
 	q, err := ch.QueueDeclare(
-		"hello", // name
+		"event_bus", // name
 		false,   // durable
 		false,   // delete when unused
 		false,   // exclusive
@@ -30,7 +29,7 @@ func send(id int) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	text := "Hello World! № "
+	text := "Event № "
 	body := fmt.Sprintf("%s%d", text, id)
 
 	err = ch.PublishWithContext(ctx,
@@ -43,5 +42,4 @@ func send(id int) {
 			Body:        []byte(body),
 		})
 	failOnError(err, "Failed to publish a message")
-	log.Printf(" [x] Sent %s\n", body)
 }

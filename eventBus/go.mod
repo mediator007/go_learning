@@ -1,4 +1,4 @@
-module rabbit
+module eventBus
 
 go 1.21.0
 
