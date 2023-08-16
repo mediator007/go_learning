@@ -25,6 +25,8 @@ func main() {
 		go sender(i)
 	}
 	
+	go server()
+	
 	reciever(1, dispatchersChannelsList)
 	wg.Wait()
 }
