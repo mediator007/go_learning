@@ -16,3 +16,12 @@ https://habr.com/ru/articles/490336/
 Docker commands:  
 ```docker pull rabbitmq:3.9.29-management-alpine```   
 ```docker run -d -p 15672:15672 --hostname my-rabbit --name some-rabbit rabbitmq:3.9.29-management-alpine```   
+http://localhost:15672/  
+Default User/password: ```guest/guest``` 
+
+## Project launching  
+Inspect RabbitMQ container and get it ip address (```172.17.0.2:5672```)  
+Inert it to the eventBus/reciever.go & eventBus/sender.go  
+Run next commands in eventBus folder:    
+```go run .``` or ```go build && ./eventBus```  
+```curl localhost:8080``` - for new event through server  

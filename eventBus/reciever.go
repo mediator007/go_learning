@@ -10,7 +10,7 @@ func SendData(ch chan string, data string) {
 
 func reciever(id int, dispatchersChannelsList []chan string) {
 
-	conn, err := amqp.Dial("amqp://guest:guest@172.17.0.2:5672/")
+	conn, err := amqp.Dial("amqp://guest:guest@172.18.0.2:5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
 
